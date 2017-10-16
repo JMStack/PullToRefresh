@@ -32,7 +32,8 @@ class DefaultViewAnimator: RefreshViewAnimator {
         case .loading:
             refreshView.activityIndicator.startAnimating()
             
-        default: break
+        case .finished:
+            refreshView.activityIndicator.stopAnimating()
         }
     }
 }
