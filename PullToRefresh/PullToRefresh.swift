@@ -59,8 +59,12 @@ open class PullToRefresh: NSObject {
                 if isCurrentlyVisible() {
                     animateFinishedState()
                 } else {
+                    removeScrollViewObserving()
                     scrollView?.contentInset = self.scrollViewDefaultInsets
                     state = .initial
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                        self.addScrollViewObserving()
+                    })
                 }
         
             default: break
@@ -105,9 +109,9 @@ open class PullToRefresh: NSObject {
                 
             case .bottom:
                 if scrollView!.contentSize.height > scrollView!.bounds.height {
-                    offset = scrollView!.contentSize.height - previousScrollViewOffset.y - scrollView!.bounds.height
+                    offset = scrollView!.contentSize.height - previousScrollViewOffset.y - scrollView!.bounds.height + scrollViewDefaultInsets.bottom
                 } else {
-                    offset = scrollView!.contentSize.height - previousScrollViewOffset.y
+                    offset = scrollView!.contentSize.height - previousScrollViewOffset.y + scrollViewDefaultInsets.bottom
                 }
             }
             let refreshViewHeight = refreshView.frame.size.height
